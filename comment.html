@@ -1,0 +1,144 @@
+/**
+ * https://github.com/ly88321/comment
+ */
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>网站留言</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+<meta name="description" content="网站留言">
+<meta name="keywords" content="网站留言">
+<meta name="author" content="网站留言" />
+<style>
+body,div,dl,dt,dd,ul,ol,li,h1,h3,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td {margin: 0;padding: 0}ol,ul {list-style: none}h1,h3,h3,h4,h5,h6 {font-size: 100%;font-weight: normal}body {height: 100%;font-size: 14px;font-family: Arial,Helvetica,"Microsoft Yahei";color: #333;}a {text-decoration: none;color: #333;}
+.container {
+	position: relative;
+	height: 100%;
+	margin-left: 25%;//元素的左边距
+	padding: 0 30px;
+	overflow: auto;
+}
+.mod-comment{
+	width: 100%;
+	max-width: 960px;
+	line-height: 22px;
+}
+.mod-comment .hd{
+	margin: 7px 0 20px;
+    border: 1px solid #fbeed5;
+    padding: 10px 20px;
+    color: #c09853;
+    background-color: #fcf8e3;
+    line-height: 22px;
+    border-radius: 3px;
+}
+.mod-comment .btn{
+	display: inline-block;
+	padding: 4px 12px;
+	background-color: #28a745;
+	color: #fff;
+	border: 1px solid rgba(27,31,35,0.2);
+	border-radius: 3px;
+}
+.mod-comment .btn:hover{
+	background-color: #269f42;
+}
+.mod-comment li{
+	margin-bottom: 12px;
+}
+.mod-comment .avatar{
+	float: left;
+}
+.mod-comment .content{
+	margin-left: 64px;
+	border: 1px solid #d1d5da;
+	border-radius: 3px;
+}
+.mod-comment .c-hd{
+	height: 40px;
+	padding: 0 20px;
+    background-color: #f6f8fa;
+    border-bottom: 1px solid #d1d5da;
+    line-height: 40px;
+    color: #586069;
+    overflow: hidden;
+}
+.mod-comment .c-hd .name{
+	font-weight: bold;
+	color: #586069;
+}
+.mod-comment .c-hd .reply{
+	float: right;
+}
+.mod-comment .time{
+	white-space: nowrap;
+}
+.mod-comment .c-bd{
+	padding: 15px;
+}
+.mod-comment .c-bd img{
+	display: block;
+	margin: 0 auto;
+}
+</style>
+<script src="ajax.js"></script>
+<script>
+	(function(){ //IE低版本兼容
+		var e = ['footer','header','section'],
+		          i= e.length;
+		while(i--){
+		      document.createElement(e[i]);
+		}
+	})();
+</script>
+</head>
+<body>
+<div class="container">
+	<div class="main">
+		<div class="mod-comment">
+			<div class="hd">
+				<p>在Github上与我留言：</p>
+				<p>
+					<a class="btn" href="https://github.com/ly88321/comment/issues/new" target="_blank">发起留言</a>
+				</p>
+			</div>
+			<div class="bd">
+				<ul id="comment">
+					<li><div class="c-bd"><img src="loading.gif" width="32" height="32"/></div></li>
+				</ul>
+			</div>
+			<p style="text-align:center;">版权所有 © 2010-2020 <a href="http://lixx.vip" target="_blank">Lixx.Vip</a><br>Email: admin [at] lixx.vip</p>
+		</div>
+	</div>
+</div>
+<script>
+	ajax({
+		'url':'https://api.github.com/repos/ly88321/comment/issues',
+		'success':function(data){
+			if(data.length){
+				var comments = [];
+				for(var i=0;i<data.length;i++){
+					var item = data[i];
+					comments.push('<li>\
+							<div class="avatar">\
+								<a href="'+item.user.html_url+'" target="_blank"><img src="'+item.user.avatar_url+'" width="44" height="44"/></a>\
+							</div>\
+							<div class="content">\
+								<div class="c-hd">\
+									<a class="reply" href="'+item.html_url+'" target="_blank">查看详情</a>\
+									<a class="name" href="'+item.user.html_url+'">'+item.user.login+'</a>\
+									<span class="time">'+(new Date(item.updated_at).toLocaleString())+'</span></div>\
+								<div class="c-bd"><h3>'+(item.title.length<20?item.title:'')+'</h3><p>'+item.body+'</p></div>\
+							</div>\
+					</li>');
+				}
+				document.getElementById('comment').innerHTML = comments.join('');
+			}
+		}
+	});
+</script>
+<div style="display: none;">
+//统计代码
+</div>
+</body>
+</html>
